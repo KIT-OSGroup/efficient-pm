@@ -931,8 +931,7 @@ int nova_create_snapshot(struct super_block *sb)
 
 
 	ktime_get_coarse_real_ts64(&now);
-	timestamp = timespec64_trunc(now,
-				   sb->s_time_gran).tv_sec;
+	timestamp = now.tv_sec;
 
 	ret = nova_initialize_snapshot_info(sb, &info, 1, epoch_id);
 	if (ret) {
