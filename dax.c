@@ -1372,6 +1372,5 @@ const struct vm_operations_struct nova_dax_vm_ops = {
 	.pfn_mkwrite = nova_dax_pfn_mkwrite,
 	.open = nova_vma_open,
 	.close = nova_vma_close,
-//	.dax_cow = nova_restore_page_write,
 };
 
