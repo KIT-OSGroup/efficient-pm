@@ -1553,7 +1553,7 @@ int nova_recovery(struct super_block *sb)
 
 	/* Always check recovery time */
 	if (measure_timing == 0)
-		getrawmonotonic(&start);
+		ktime_get_raw_ts64(&start);
 
 	NOVA_START_TIMING(recovery_t, start);
 	sbi->num_blocks = ((unsigned long)(initsize) >> PAGE_SHIFT);
@@ -1591,7 +1591,7 @@ int nova_recovery(struct super_block *sb)
 out:
 	NOVA_END_TIMING(recovery_t, start);
 	if (measure_timing == 0) {
-		getrawmonotonic(&end);
+		ktime_get_raw_ts64(&end);
 		Timingstats[recovery_t] +=
 			(end.tv_sec - start.tv_sec) * 1000000000 +
 			(end.tv_nsec - start.tv_nsec);

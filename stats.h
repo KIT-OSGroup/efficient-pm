@@ -201,17 +201,17 @@ DECLARE_PER_CPU(u64[TIMING_NUM], Countstats_percpu);
 extern u64 IOstats[STATS_NUM];
 DECLARE_PER_CPU(u64[STATS_NUM], IOstats_percpu);
 
-typedef struct timespec timing_t;
+typedef struct timespec64 timing_t;
 
 #define	INIT_TIMING(X)	timing_t X = {0}
 
 #define NOVA_START_TIMING(name, start) \
-	{if (measure_timing) getrawmonotonic(&start); }
+	{if (measure_timing) ktime_get_raw_ts64(&start); }
 
 #define NOVA_END_TIMING(name, start) \
 	{if (measure_timing) { \
 		INIT_TIMING(end); \
-		getrawmonotonic(&end); \
+		ktime_get_raw_ts64(&end); \
 		__this_cpu_add(Timingstats_percpu[name], \
 			(end.tv_sec - start.tv_sec) * 1000000000 + \
 			(end.tv_nsec - start.tv_nsec)); \

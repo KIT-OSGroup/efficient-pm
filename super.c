@@ -366,7 +366,7 @@ inline void nova_update_super_crc(struct super_block *sb)
 	struct nova_sb_info *sbi = NOVA_SB(sb);
 	u32 crc = 0;
 
-	sbi->nova_sb->s_wtime = cpu_to_le32(get_seconds());
+	sbi->nova_sb->s_wtime = cpu_to_le32(ktime_get_seconds());
 	sbi->nova_sb->s_sum = 0;
 	crc = nova_crc32c(~0, (__u8 *)sbi->nova_sb + sizeof(__le32),
 			sizeof(struct nova_super_block) - sizeof(__le32));
@@ -379,7 +379,7 @@ static inline void nova_update_mount_time(struct super_block *sb)
 	struct nova_sb_info *sbi = NOVA_SB(sb);
 	u64 mnt_write_time;
 
-	mnt_write_time = (get_seconds() & 0xFFFFFFFF);
+	mnt_write_time = (ktime_get_seconds() & 0xFFFFFFFF);
 	mnt_write_time = mnt_write_time | (mnt_write_time << 32);
 
 	sbi->nova_sb->s_mtime = cpu_to_le64(mnt_write_time);
@@ -471,7 +471,7 @@ static struct nova_inode *nova_init(struct super_block *sb,
 	root_i->i_flags = 0;
 	root_i->i_size = cpu_to_le64(sb->s_blocksize);
 	root_i->i_atime = root_i->i_mtime = root_i->i_ctime =
-		cpu_to_le32(get_seconds());
+		cpu_to_le32(ktime_get_seconds());
 	root_i->nova_ino = cpu_to_le64(NOVA_ROOT_INO);
 	root_i->valid = 1;
 	/* nova_sync_inode(root_i); */
