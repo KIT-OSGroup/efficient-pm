@@ -1054,6 +1054,7 @@ u64 nova_new_nova_inode(struct super_block *sb, u64 *pi_addr)
 }
 
 struct inode *nova_new_vfs_inode(enum nova_new_inode_type type,
+	struct user_namespace *mnt_userns,
 	struct inode *dir, u64 pi_addr, u64 ino, umode_t mode,
 	size_t size, dev_t rdev, const struct qstr *qstr, u64 epoch_id)
 {
@@ -1079,7 +1080,7 @@ struct inode *nova_new_vfs_inode(enum nova_new_inode_type type,
 		goto fail2;
 	}
 
-	inode_init_owner(inode, dir, mode);
+	inode_init_owner(mnt_userns, inode, dir, mode);
 	inode->i_blocks = inode->i_size = 0;
 	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
 
@@ -1268,8 +1269,8 @@ static void nova_setsize(struct inode *inode, loff_t oldsize, loff_t newsize,
 	NOVA_END_TIMING(setsize_t, setsize_time);
 }
 
-int nova_getattr(const struct path *path, struct kstat *stat,
-		 u32 request_mask, unsigned int query_flags)
+int nova_getattr(struct user_namespace *mnt_userns, const struct path *path,
+		struct kstat *stat, u32 request_mask, unsigned int query_flags)
 {
 	struct inode *inode = d_inode(path->dentry);
 	struct nova_inode_info *si = NOVA_I(inode);
@@ -1285,13 +1286,14 @@ int nova_getattr(const struct path *path, struct kstat *stat,
 	if (flags & FS_NODUMP_FL)
 		stat->attributes |= STATX_ATTR_NODUMP;
 
-	generic_fillattr(inode, stat);
+	generic_fillattr(mnt_userns, inode, stat);
 	/* stat->blocks should be the number of 512B blocks */
 	stat->blocks = (inode->i_blocks << inode->i_sb->s_blocksize_bits) >> 9;
 	return 0;
 }
 
-int nova_notify_change(struct dentry *dentry, struct iattr *attr)
+int nova_notify_change(struct user_namespace *mnt_userns,
+		struct dentry *dentry, struct iattr *attr)
 {
 	struct inode *inode = dentry->d_inode;
 	struct nova_inode_info *si = NOVA_I(inode);
@@ -1310,12 +1312,12 @@ int nova_notify_change(struct dentry *dentry, struct iattr *attr)
 		goto out;
 	}
 
-	ret = setattr_prepare(dentry, attr);
+	ret = setattr_prepare(mnt_userns, dentry, attr);
 	if (ret)
 		goto out;
 
 	/* Update inode with attr except for size */
-	setattr_copy(inode, attr);
+	setattr_copy(mnt_userns, inode, attr);
 
 	epoch_id = nova_get_epoch_id(sb);
 

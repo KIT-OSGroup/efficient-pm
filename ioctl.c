@@ -30,6 +30,7 @@ long nova_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	struct nova_inode *pi;
 	struct super_block *sb = inode->i_sb;
 	struct nova_inode_update update;
+	struct user_namespace *mnt_userns = file_mnt_user_ns(filp);
 	unsigned int flags;
 	int ret;
 	unsigned long irq_flags = 0;
@@ -51,7 +52,7 @@ long nova_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		if (ret)
 			return ret;
 
-		if (!inode_owner_or_capable(inode)) {
+		if (!inode_owner_or_capable(mnt_userns, inode)) {
 			ret = -EPERM;
 			goto flags_out;
 		}
@@ -106,7 +107,7 @@ flags_out:
 		u64 epoch_id;
 		__u32 generation;
 
-		if (!inode_owner_or_capable(inode))
+		if (!inode_owner_or_capable(mnt_userns, inode))
 			return -EPERM;
 		ret = mnt_want_write_file(filp);
 		if (ret)
