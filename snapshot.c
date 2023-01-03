@@ -640,7 +640,7 @@ static int nova_copy_snapshot_list_to_dram(struct super_block *sb,
 
 	for (i = 0; i < nvmm_list->num_pages; i++) {
 		/* Leave next_page field alone */
-		ret = memcpy_mcsafe((void *)curr_dram_addr, curr_nvmm_addr,
+		ret = copy_mc_to_kernel((void *)curr_dram_addr, curr_nvmm_addr,
 						LOG_BLOCK_TAIL);
 
 		if (ret < 0) {

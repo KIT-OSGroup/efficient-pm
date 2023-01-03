@@ -514,7 +514,7 @@ static int nova_check_super(struct super_block *sb,
 	struct nova_sb_info *sbi = NOVA_SB(sb);
 	int rc;
 
-	rc = memcpy_mcsafe(sbi->nova_sb, ps,
+	rc = copy_mc_to_kernel(sbi->nova_sb, ps,
 				sizeof(struct nova_super_block));
 
 	if (rc < 0)
