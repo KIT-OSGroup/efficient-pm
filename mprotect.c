@@ -439,12 +439,12 @@ out:
 
 static int nova_set_vma_read(struct vm_area_struct *vma)
 {
-	struct mm_struct *mm = vma->vm_mm;
+	struct address_space *mapping = vma->vm_file->f_mapping;
 	unsigned long oldflags = vma->vm_flags;
 	unsigned long newflags;
 	pgprot_t new_page_prot;
 
-	down_write(&mm->mmap_sem);
+	filemap_invalidate_lock(mapping);
 
 	newflags = oldflags & (~VM_WRITE);
 	if (oldflags == newflags)
@@ -460,7 +460,7 @@ static int nova_set_vma_read(struct vm_area_struct *vma)
 	vma->original_write = 1;
 
 out:
-	up_write(&mm->mmap_sem);
+	filemap_invalidate_unlock(mapping);
 
 	return 0;
 }
