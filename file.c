@@ -325,7 +325,7 @@ next:
 
 	}
 
-	nova_dbgv("blocks: %lu, %lu\n", inode->i_blocks, sih->i_blocks);
+	nova_dbgv("blocks: %llu, %lu\n", inode->i_blocks, sih->i_blocks);
 
 	if (ret || (mode & FALLOC_FL_KEEP_SIZE)) {
 		nova_memunlock_inode(sb, pi, &irq_flags);
@@ -812,7 +812,7 @@ static ssize_t do_nova_cow_file_write(struct file *filp,
 
 	ret = written;
 	NOVA_STATS_ADD(cow_write_breaks, step);
-	nova_dbgv("blocks: %lu, %lu\n", inode->i_blocks, sih->i_blocks);
+	nova_dbgv("blocks: %llu, %lu\n", inode->i_blocks, sih->i_blocks);
 
 	*ppos = pos;
 	if (pos > inode->i_size) {
