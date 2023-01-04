@@ -284,9 +284,7 @@ int nova_reset_mapping_csum_parity(struct super_block *sb,
 			__func__, start_pgoff, end_pgoff);
 
 	while (!done) {
-		pvec.nr = find_get_entries_tag(mapping, start_pgoff,
-				PAGECACHE_TAG_DIRTY, PAGEVEC_SIZE,
-				pvec.pages, indices);
+		find_get_entries(mapping, start_pgoff, end_pgoff, &pvec, indices);
 
 		if (pvec.nr == 0)
 			break;
@@ -295,6 +293,8 @@ int nova_reset_mapping_csum_parity(struct super_block *sb,
 			start = indices[0];
 
 		for (i = 0; i < pvec.nr; i++) {
+			if (!xa_get_mark(&mapping->i_pages, indices[i], PAGECACHE_TAG_DIRTY))
+				continue;
 			if (indices[i] >= end_pgoff) {
 				done = true;
 				break;
