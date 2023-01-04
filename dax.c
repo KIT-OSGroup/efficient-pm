@@ -1062,7 +1062,7 @@ int nova_iomap_end(struct inode *inode, loff_t offset, loff_t length,
 
 
 static int nova_iomap_begin_lock(struct inode *inode, loff_t offset,
-	loff_t length, unsigned int flags, struct iomap *iomap)
+	loff_t length, unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
 {
 	return nova_iomap_begin(inode, offset, length, flags, iomap, true);
 }
