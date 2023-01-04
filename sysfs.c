@@ -73,13 +73,12 @@ ssize_t nova_seq_clear_stats(struct file *filp, const char __user *buf,
 	return len;
 }
 
-static const struct file_operations nova_seq_timing_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_timing_open,
-	.read		= seq_read,
-	.write		= nova_seq_clear_stats,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_timing_fops = {
+	.proc_open		= nova_seq_timing_open,
+	.proc_read		= seq_read,
+	.proc_write		= nova_seq_clear_stats,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 static int nova_seq_IO_show(struct seq_file *seq, void *v)
@@ -188,13 +187,12 @@ static int nova_seq_IO_open(struct inode *inode, struct file *file)
 	return single_open(file, nova_seq_IO_show, PDE_DATA(inode));
 }
 
-static const struct file_operations nova_seq_IO_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_IO_open,
-	.read		= seq_read,
-	.write		= nova_seq_clear_stats,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_IO_fops = {
+	.proc_open		= nova_seq_IO_open,
+	.proc_read		= seq_read,
+	.proc_write		= nova_seq_clear_stats,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 static int nova_seq_show_allocator(struct seq_file *seq, void *v)
@@ -261,12 +259,11 @@ static int nova_seq_allocator_open(struct inode *inode, struct file *file)
 				PDE_DATA(inode));
 }
 
-static const struct file_operations nova_seq_allocator_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_allocator_open,
-	.read		= seq_read,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_allocator_fops = {
+	.proc_open		= nova_seq_allocator_open,
+	.proc_read		= seq_read,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 /* ====================== Snapshot ======================== */
@@ -293,13 +290,12 @@ ssize_t nova_seq_create_snapshot(struct file *filp, const char __user *buf,
 	return len;
 }
 
-static const struct file_operations nova_seq_create_snapshot_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_create_snapshot_open,
-	.read		= seq_read,
-	.write		= nova_seq_create_snapshot,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_create_snapshot_fops = {
+	.proc_open		= nova_seq_create_snapshot_open,
+	.proc_read		= seq_read,
+	.proc_write		= nova_seq_create_snapshot,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 static int nova_seq_delete_snapshot_show(struct seq_file *seq, void *v)
@@ -328,13 +324,12 @@ ssize_t nova_seq_delete_snapshot(struct file *filp, const char __user *buf,
 	return len;
 }
 
-static const struct file_operations nova_seq_delete_snapshot_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_delete_snapshot_open,
-	.read		= seq_read,
-	.write		= nova_seq_delete_snapshot,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_delete_snapshot_fops = {
+	.proc_open		= nova_seq_delete_snapshot_open,
+	.proc_read		= seq_read,
+	.proc_write		= nova_seq_delete_snapshot,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 static int nova_seq_show_snapshots(struct seq_file *seq, void *v)
@@ -351,12 +346,11 @@ static int nova_seq_show_snapshots_open(struct inode *inode, struct file *file)
 				PDE_DATA(inode));
 }
 
-static const struct file_operations nova_seq_show_snapshots_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_show_snapshots_open,
-	.read		= seq_read,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_show_snapshots_fops = {
+	.proc_open		= nova_seq_show_snapshots_open,
+	.proc_read		= seq_read,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 /* ====================== Performance ======================== */
@@ -391,13 +385,12 @@ ssize_t nova_seq_test_perf(struct file *filp, const char __user *buf,
 	return len;
 }
 
-static const struct file_operations nova_seq_test_perf_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_test_perf_open,
-	.read		= seq_read,
-	.write		= nova_seq_test_perf,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_test_perf_fops = {
+	.proc_open		= nova_seq_test_perf_open,
+	.proc_read		= seq_read,
+	.proc_write		= nova_seq_test_perf,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 
@@ -486,13 +479,12 @@ out:
 	return retval;
 }
 
-static const struct file_operations nova_seq_gc_fops = {
-	.owner		= THIS_MODULE,
-	.open		= nova_seq_gc_open,
-	.read		= seq_read,
-	.write		= nova_seq_gc,
-	.llseek		= seq_lseek,
-	.release	= single_release,
+static const struct proc_ops nova_seq_gc_fops = {
+	.proc_open		= nova_seq_gc_open,
+	.proc_read		= seq_read,
+	.proc_write		= nova_seq_gc,
+	.proc_lseek		= seq_lseek,
+	.proc_release	= single_release,
 };
 
 /* ====================== Setup/teardown======================== */
