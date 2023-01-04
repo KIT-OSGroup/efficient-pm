@@ -121,22 +121,23 @@ static int nova_get_nvmm_info(struct super_block *sb,
 	struct dax_device *dax_dev;
 	int ret;
 
-	ret = bdev_dax_supported(sb->s_bdev, PAGE_SIZE);
+	sbi->s_bdev = sb->s_bdev;
+
+	dax_dev = fs_dax_get_by_bdev(sb->s_bdev);
+	if (!dax_dev) {
+		nova_err(sb, "Couldn't retrieve DAX device.\n");
+		return -EINVAL;
+	}
+	sbi->s_dax_dev = dax_dev;
+
+	ret = dax_supported(dax_dev, sb->s_bdev, PAGE_SIZE, 0,
+			bdev_nr_sectors(sb->s_bdev));
 	nova_dbg_verbose("%s: dax_supported = %d; bdev->super=0x%p",
 			 __func__, ret, sb->s_bdev->bd_super);
 	if (!ret) {
 		nova_err(sb, "device does not support DAX\n");
 		return -EINVAL;
 	}
-
-	sbi->s_bdev = sb->s_bdev;
-
-	dax_dev = fs_dax_get_by_host(sb->s_bdev->bd_disk->disk_name);
-	if (!dax_dev) {
-		nova_err(sb, "Couldn't retrieve DAX device.\n");
-		return -EINVAL;
-	}
-	sbi->s_dax_dev = dax_dev;
 
 	size = dax_direct_access(sbi->s_dax_dev, 0, LONG_MAX/PAGE_SIZE,
 				 &virt_addr, &__pfn_t) * PAGE_SIZE;
