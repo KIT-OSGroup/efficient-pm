@@ -1444,11 +1444,11 @@ static int nova_writepages(struct address_space *mapping,
 	struct writeback_control *wbc)
 {
 	int ret;
+	struct nova_sb_info *sbi = NOVA_SB(mapping->host->i_sb);
 	INIT_TIMING(wp_time);
 
 	NOVA_START_TIMING(write_pages_t, wp_time);
-	ret = dax_writeback_mapping_range(mapping,
-			mapping->host->i_sb->s_bdev, wbc);
+	ret = dax_writeback_mapping_range(mapping, sbi->s_dax_dev, wbc);
 	NOVA_END_TIMING(write_pages_t, wp_time);
 	return ret;
 }
