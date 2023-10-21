@@ -1,0 +1,28 @@
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index f5fa7be8d17e..e1ba98724ddf 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -3386,6 +3386,7 @@ void free_workqueue_attrs(struct workqueue_attrs *attrs)
+ 		kfree(attrs);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(free_workqueue_attrs);
+ 
+ /**
+  * alloc_workqueue_attrs - allocate a workqueue_attrs
+@@ -3411,6 +3412,7 @@ struct workqueue_attrs *alloc_workqueue_attrs(void)
+ 	free_workqueue_attrs(attrs);
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(alloc_workqueue_attrs);
+ 
+ static void copy_workqueue_attrs(struct workqueue_attrs *to,
+ 				 const struct workqueue_attrs *from)
+@@ -4122,6 +4124,7 @@ int apply_workqueue_attrs(struct workqueue_struct *wq,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(apply_workqueue_attrs);
+ 
+ /**
+  * wq_update_unbound_numa - update NUMA affinity of a wq for CPU hot[un]plug
