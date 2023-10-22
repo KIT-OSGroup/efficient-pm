@@ -15,7 +15,7 @@ nova-y := balloc.o bbuild.o checksum.o dax.o dir.o file.o gc.o inode.o ioctl.o \
 .PHONY: install clean tools
 
 nova.ko:
-	+make -C $(KERNEL_TREE) M=$(SRC_DIR) modules
+	+make -C $(KERNEL_TREE) M=$(SRC_DIR) modules KBUILD_EXTRA_SYMBOLS=`pwd`/../module/Module.symvers
 
 install:
 	+make -C $(KERNEL_TREE) M=$(SRC_DIR) modules_install

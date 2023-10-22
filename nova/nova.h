@@ -256,12 +256,14 @@ static inline void nova_memcpy_atomic(void *dst, const void *src, u8 size)
 	}
 }
 
+int ep_write_pmem(void *dst, const void *src, size_t len);
+
 static inline int memcpy_to_pmem_nocache(void *dst, const void *src,
 	unsigned int size)
 {
 	int ret;
 
-	ret = __copy_from_user_inatomic_nocache(dst, src, size);
+	ret = ep_write_pmem(dst, src, size);
 
 	return ret;
 }
